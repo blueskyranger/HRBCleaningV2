@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cleaning Checklist v1.0</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 { text-align: center; }
+
+    li {
+      margin: 12px 0;
+      font-size: 18px;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.3);
+      margin-right: 10px;
+    }
+
+    /* Collapsible room styling */
+    details.room {
+      margin-top: 18px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+
+    details.room > summary {
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    details.room > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.room > summary::before {
+      content: "▸ ";
+    }
+
+    details.room[open] > summary::before {
+      content: "▾ ";
+    }
+
+    .room ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 12px;
+    }
+    /* Re-enable bullets ONLY for refill sub-items */
+    .room ul.sub-refill {
+      list-style: disc;
+      padding-left: 28px;
+      margin-top: 6px;
+    }
+    .room ul.sub-refill li {
+    margin: 4px 0;
+    }
+
+    /* Nested lists inside Toilets */
+    .room ul ul {
+      margin-left: 22px;
+      margin-top: 8px;
+    }
+
+    .room ul ul li {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Cleaning Checklist v1.1</h1>
+
+  <details class="room">
+    <summary>Foyer</summary>
+    <ul>
+      <li><label><input type="checkbox"> Mop</label></li>
+      <li><label><input type="checkbox"> Clean windows &amp; surfaces</label></li>
+      <li><label><input type="checkbox"> Wipe chairs, tables</label></li>
+      <li><label><input type="checkbox"> Wipe water cooler, including top and sides</label></li>
+      <li><label><input type="checkbox"> Dust bookshelf</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Kitchen</summary>
+    <ul>
+      <li><label><input type="checkbox"> Empty bins</label></li>
+      <li><label><input type="checkbox"> Wipe counter &amp; surfaces</label></li>
+      <li><label><input type="checkbox"> Clean microwave</label></li>
+      <li><label><input type="checkbox"> Wipe fridge door</label></li>
+      <li><label><input type="checkbox"> Vacuum & mop floor</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Toilets</summary>
+
+    <ul>
+      <li>
+        <strong>Toilet - Disabled</strong>
+        <ul>
+          <li><label><input type="checkbox"> Empty bins</label></li>
+          <li><label><input type="checkbox"> Clean sink, taps, mirror &amp; change table</label></li>          
+          <li><label><input type="checkbox"> Clean toilet</label></li>
+          <li><label><input type="checkbox"> Mop floor</label></li>
+          <li><label><input type="checkbox"> Wipe door handle &amp; lock</label></li>
+          <!-- Refill item properly wrapping the sub-list -->
+          <li><label><input type="checkbox"> Refill</label>
+            <ul class="sub-refill">
+              <li>Hand soap</li>
+              <li>Paper towels</li>
+              <li>Toilet rolls</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>Toilet Female</strong>
+        <ul>
+          <li><label><input type="checkbox"> Empty bins</label></li>
+          <li><label><input type="checkbox"> Clean sink, taps, mirror &amp; surfaces</label></li>          
+          <li><label><input type="checkbox"> Clean toilets (x4)</label></li>
+          <li><label><input type="checkbox"> Mop floor</label></li>
+          <li><label><input type="checkbox"> Wipe door handle &amp; lock</label></li>
+          <!-- Refill item properly wrapping the sub-list -->
+          <li><label><input type="checkbox"> Refill</label>
+            <ul class="sub-refill">
+              <li>Hand soap</li>
+              <li>Paper towels</li>
+              <li>Toilet rolls</li>
+              <li>Female products</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li>
+        <strong>Toilet Male</strong>
+        <ul>
+          <li><label><input type="checkbox"> Empty bins</label></li>
+          <li><label><input type="checkbox"> Clean sink, taps, mirror &amp; surfaces</label></li>          
+          <li><label><input type="checkbox"> Clean toilets (x2)</label></li>
+          <li><label><input type="checkbox"> Mop floor</label></li>
+          <li><label><input type="checkbox"> Wipe door handles &amp; locks</label></li>
+          <!-- Refill item properly wrapping the sub-list -->
+          <li><label><input type="checkbox"> Refill</label>
+            <ul class="sub-refill">
+              <li>Hand soap</li>
+              <li>Paper towels</li>
+              <li>Toilet rolls</li>
+            </ul>
+          </li>  
+        </ul>
+      </li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Auditorium</summary>
+    <ul>
+      <li><label><input type="checkbox"> Vacuum main hall &amp; stage</label></li>
+      <li><label><input type="checkbox"> Empty bin (music desk)</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Stairs</summary>
+    <ul>
+      <li><label><input type="checkbox"> Vacuum</label></li>
+      <li><label><input type="checkbox"> Wipe railing</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Parents room</summary>
+    <ul>
+      <li><label><input type="checkbox"> Empty bin</label></li>
+      <li><label><input type="checkbox"> Wipe glass table &amp; windows</label></li>
+      <li><label><input type="checkbox"> Vacuum</label></li>
+      <li><label><input type="checkbox"> Pickup toys and small objects</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Offices - Admin & Tom</summary>
+    <ul>
+      <li><label><input type="checkbox"> Empty bins &amp; shredder</label></li>
+      <li><label><input type="checkbox"> Wipe surfaces</label></li>
+      <li><label><input type="checkbox"> Vacuum</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Upstairs hallway and room 1 & 2</summary>
+    <ul>
+      <li><label><input type="checkbox"> Empty bins</label></li>
+      <li><label><input type="checkbox"> Vacuum</label></li>
+    </ul>
+  </details>
+
+  <details class="room">
+    <summary>Pre-lockup tasks</summary>
+    <ul>
+      <li><label><input type="checkbox"> All lights off</label></li>
+      <li><label><input type="checkbox"> All airconditioners off</label></li>
+      <li><label><input type="checkbox"> Handpaper and toilet key back on hook</label></li>
+      <li><label><input type="checkbox"> Post in chat any low stock items</label></li>
+    </ul>
+  </details>
+
+  <p style="text-align:center;">
+  <a href="schedule.html">📅 View Monthly Cleaning Schedule</a>
+</p>
+
+</body>
+</html>
