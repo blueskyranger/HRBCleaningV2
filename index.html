@@ -226,9 +226,16 @@
   <a href="schedule.html">📅 View Monthly Cleaning Schedule</a>
 </p>
 
-# FireBase Code
+# FireBase Code with sign-in
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+  // Auth imports
+  import {
+    getAuth,
+    onAuthStateChanged,
+    signInAnonymously
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwyzLorHfENmCOVr3B1q4FhUn7sI565cI",
@@ -239,9 +246,27 @@
     appId: "1:30392652789:web:e4c0fc5202299cc4df46bc"
   };
 
+  // 1) Initialize Firebase “app”
   const app = initializeApp(firebaseConfig);
 
-  console.log("Firebase app initialized", app);
+  // 2) Create an Auth “client” bound to this app
+  const auth = getAuth(app);
+
+  // 3) Observe auth state (this fires whenever user becomes signed in/out)
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("✅ Signed in anonymously");
+      console.log("uid:", user.uid);
+      console.log("isAnonymous:", user.isAnonymous);
+    } else {
+      console.log("❌ Signed out");
+    }
+  });
+
+  // 4) Trigger anonymous sign-in (no UI)
+  signInAnonymously(auth).catch((err) => {
+    console.error("Anonymous sign-in failed:", err.code, err.message);
+  });
 </script>
 
 </body>
