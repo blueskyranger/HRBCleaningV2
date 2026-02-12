@@ -226,5 +226,23 @@
   <a href="schedule.html">📅 View Monthly Cleaning Schedule</a>
 </p>
 
+# FireBase Code
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwyzLorHfENmCOVr3B1q4FhUn7sI565cI",
+    authDomain: "hrb-cleaning-v2.firebaseapp.com",
+    projectId: "hrb-cleaning-v2",
+    storageBucket: "hrb-cleaning-v2.firebasestorage.app",
+    messagingSenderId: "30392652789",
+    appId: "1:30392652789:web:e4c0fc5202299cc4df46bc"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  console.log("Firebase app initialized", app);
+</script>
+
 </body>
 </html>
