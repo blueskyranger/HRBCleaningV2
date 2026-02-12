@@ -230,18 +230,16 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
-  // Auth
-  import {
-    getAuth,
-    onAuthStateChanged,
-    signInAnonymously
-  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, signInAnonymously }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
-  // Firestore
   import {
     getFirestore,
     doc,
-    onSnapshot
+    onSnapshot,
+    setDoc,
+    updateDoc,
+    serverTimestamp
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -255,7 +253,7 @@
 
   const app = initializeApp(firebaseConfig);
 
-  // --- Auth (anonymous) ---
+  // --- Auth ---
   const auth = getAuth(app);
   onAuthStateChanged(auth, (user) => {
     if (user) console.log("✅ Signed in. uid:", user.uid);
@@ -267,27 +265,60 @@
   // --- Firestore ---
   const db = getFirestore(app);
 
-  // Pick a checklist ID from the URL, e.g. ?list=hrb-weekly
   const params = new URLSearchParams(location.search);
   const listId = params.get("list") || "default";
-
-  // This is the shared document everyone will read/write
   const checklistRef = doc(db, "checklists", listId);
 
   console.log("Listening to checklist:", listId);
 
-  // LIVE subscription: fires now + whenever anyone updates it
+  // Grab all checkboxes that participate in sync
+  const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"][data-id]'));
+
+  // Prevent “echo” writes when we apply remote state
+  let applyingRemoteState = false;
+
+  // Ensure the doc exists (safe even if it already exists)
+  await setDoc(checklistRef, { state: {}, updatedAt: serverTimestamp() }, { merge: true });
+
+  // 1) Firestore → UI (live)
   onSnapshot(checklistRef, (snap) => {
-    if (!snap.exists()) {
-      console.log("📄 Checklist doc does not exist yet (we'll create it next).");
-      return;
-    }
+    if (!snap.exists()) return;
+
     const data = snap.data();
-    console.log("📥 Firestore update:", data);
+    const state = data.state || {};
+
+    applyingRemoteState = true;
+    for (const cb of checkboxes) {
+      const id = cb.dataset.id;
+      cb.checked = !!state[id];
+    }
+    applyingRemoteState = false;
+
+    console.log("📥 Applied Firestore state");
   }, (err) => {
     console.error("onSnapshot error:", err.code, err.message);
   });
+
+  // 2) UI → Firestore (on change)
+  for (const cb of checkboxes) {
+    cb.addEventListener("change", async () => {
+      if (applyingRemoteState) return;
+
+      const id = cb.dataset.id;
+
+      try {
+        await updateDoc(checklistRef, {
+          [`state.${id}`]: cb.checked,
+          updatedAt: serverTimestamp()
+        });
+        console.log("📤 Saved:", id, cb.checked);
+      } catch (err) {
+        console.error("Save failed:", err.code, err.message);
+      }
+    });
+  }
 </script>
+
 
 
 </body>
