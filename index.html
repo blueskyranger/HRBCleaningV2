@@ -226,16 +226,23 @@
   <a href="schedule.html">📅 View Monthly Cleaning Schedule</a>
 </p>
 
-# FireBase Code with sign-in
+  # FireBase Code with sign-in and State Store
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
-  // Auth imports
+  // Auth
   import {
     getAuth,
     onAuthStateChanged,
     signInAnonymously
   } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+  // Firestore
+  import {
+    getFirestore,
+    doc,
+    onSnapshot
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAwyzLorHfENmCOVr3B1q4FhUn7sI565cI",
@@ -246,28 +253,42 @@
     appId: "1:30392652789:web:e4c0fc5202299cc4df46bc"
   };
 
-  // 1) Initialize Firebase “app”
   const app = initializeApp(firebaseConfig);
 
-  // 2) Create an Auth “client” bound to this app
+  // --- Auth (anonymous) ---
   const auth = getAuth(app);
-
-  // 3) Observe auth state (this fires whenever user becomes signed in/out)
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("✅ Signed in anonymously");
-      console.log("uid:", user.uid);
-      console.log("isAnonymous:", user.isAnonymous);
-    } else {
-      console.log("❌ Signed out");
-    }
+    if (user) console.log("✅ Signed in. uid:", user.uid);
   });
-
-  // 4) Trigger anonymous sign-in (no UI)
   signInAnonymously(auth).catch((err) => {
     console.error("Anonymous sign-in failed:", err.code, err.message);
   });
+
+  // --- Firestore ---
+  const db = getFirestore(app);
+
+  // Pick a checklist ID from the URL, e.g. ?list=hrb-weekly
+  const params = new URLSearchParams(location.search);
+  const listId = params.get("list") || "default";
+
+  // This is the shared document everyone will read/write
+  const checklistRef = doc(db, "checklists", listId);
+
+  console.log("Listening to checklist:", listId);
+
+  // LIVE subscription: fires now + whenever anyone updates it
+  onSnapshot(checklistRef, (snap) => {
+    if (!snap.exists()) {
+      console.log("📄 Checklist doc does not exist yet (we'll create it next).");
+      return;
+    }
+    const data = snap.data();
+    console.log("📥 Firestore update:", data);
+  }, (err) => {
+    console.error("onSnapshot error:", err.code, err.message);
+  });
 </script>
+
 
 </body>
 </html>
