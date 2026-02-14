@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cleaning Checklist v2.0</title>
+  <title>Cleaning Checklist v2.1</title>
 
   <style>
     body {
@@ -81,7 +81,7 @@
 </head>
 
 <body>
-  <h1>Cleaning Checklist v2.0</h1>
+  <h1>Cleaning Checklist v2.1</h1>
 
   <details class="room">
     <summary>Foyer</summary>
@@ -91,17 +91,18 @@
       <li><label><input type="checkbox" data-id="foyer-wipe-chairs"> Wipe chairs, tables</label></li>
       <li><label><input type="checkbox" data-id="foyer-water-cooler"> Wipe water cooler, including top and sides</label></li>
       <li><label><input type="checkbox" data-id="foyer-dust-bookshelf"> Dust bookshelf</label></li>
+      <li><label><input type="checkbox" data-id="foyer-dust-cobwebs"> check for cobwebs & dust</label></li>
     </ul>
   </details>
 
   <details class="room">
     <summary>Kitchen</summary>
     <ul>
-      <li><label><input type="checkbox"> Empty bins</label></li>
-      <li><label><input type="checkbox"> Wipe counter &amp; surfaces</label></li>
-      <li><label><input type="checkbox"> Clean microwave</label></li>
-      <li><label><input type="checkbox"> Wipe fridge door</label></li>
-      <li><label><input type="checkbox"> Vacuum & mop floor</label></li>
+      <li><label><input type="checkbox" data-id="Kitchen-bins"> Empty bins</label></li>
+      <li><label><input type="checkbox" data-id="Kitchen-counter"> Wipe counter &amp; surfaces</label></li>
+      <li><label><input type="checkbox" data-id="Kitchen-microwave"> Clean microwave</label></li>
+      <li><label><input type="checkbox" data-id="Kitchen-fridge"> Wipe fridge door</label></li>
+      <li><label><input type="checkbox" data-id="Kitchen-mop"> Vacuum & mop floor</label></li>
     </ul>
   </details>
 
@@ -112,13 +113,13 @@
       <li>
         <strong>Toilet - Disabled</strong>
         <ul>
-          <li><label><input type="checkbox"> Empty bins</label></li>
-          <li><label><input type="checkbox"> Clean sink, taps, mirror &amp; change table</label></li>          
-          <li><label><input type="checkbox"> Clean toilet</label></li>
-          <li><label><input type="checkbox"> Mop floor</label></li>
-          <li><label><input type="checkbox"> Wipe door handle &amp; lock</label></li>
+          <li><label><input type="checkbox" data-id="ToiletDisabled-bins"> Empty bins</label></li>
+          <li><label><input type="checkbox" data-id="ToiletDisabled-wipe-general"> Clean sink, taps, mirror &amp; change table</label></li>          
+          <li><label><input type="checkbox" data-id="ToiletDisabled-toilet"> Clean toilet</label></li>
+          <li><label><input type="checkbox" data-id="ToiletDisabled-mop"> Mop floor</label></li>
+          <li><label><input type="checkbox" data-id="ToiletDisabled-wipe-door"> Wipe door handle &amp; lock</label></li>
           <!-- Refill item properly wrapping the sub-list -->
-          <li><label><input type="checkbox"> Refill</label>
+          <li><label><input type="checkbox" data-id="ToiletDisabled-refills"> Refill</label>
             <ul class="sub-refill">
               <li>Hand soap</li>
               <li>Paper towels</li>
@@ -131,13 +132,13 @@
       <li>
         <strong>Toilet Female</strong>
         <ul>
-          <li><label><input type="checkbox"> Empty bins</label></li>
-          <li><label><input type="checkbox"> Clean sink, taps, mirror &amp; surfaces</label></li>          
-          <li><label><input type="checkbox"> Clean toilets (x4)</label></li>
-          <li><label><input type="checkbox"> Mop floor</label></li>
-          <li><label><input type="checkbox"> Wipe door handle &amp; lock</label></li>
+          <li><label><input type="checkbox" data-id="ToiletFemale-bins"> Empty bins</label></li>
+          <li><label><input type="checkbox" data-id="ToiletFemale-wipe-general"> Clean sink, taps, mirror &amp; surfaces</label></li>          
+          <li><label><input type="checkbox" data-id="ToiletFemale-toilet"> Clean toilets (x4)</label></li>
+          <li><label><input type="checkbox" data-id="ToiletFemale-mop"> Mop floor</label></li>
+          <li><label><input type="checkbox" data-id="ToiletFemale-wipe-door"> Wipe door handle &amp; lock</label></li>
           <!-- Refill item properly wrapping the sub-list -->
-          <li><label><input type="checkbox"> Refill</label>
+          <li><label><input type="checkbox" data-id="ToiletFemale-refills"> Refill</label>
             <ul class="sub-refill">
               <li>Hand soap</li>
               <li>Paper towels</li>
@@ -151,13 +152,13 @@
       <li>
         <strong>Toilet Male</strong>
         <ul>
-          <li><label><input type="checkbox"> Empty bins</label></li>
-          <li><label><input type="checkbox"> Clean sink, taps, mirror &amp; surfaces</label></li>          
-          <li><label><input type="checkbox"> Clean toilets (x2)</label></li>
-          <li><label><input type="checkbox"> Mop floor</label></li>
-          <li><label><input type="checkbox"> Wipe door handles &amp; locks</label></li>
+          <li><label><input type="checkbox" data-id="ToiletMale-bins"> Empty bins</label></li>
+          <li><label><input type="checkbox" data-id="ToiletMale-wipe-general"> Clean sink, taps, mirror &amp; surfaces</label></li>          
+          <li><label><input type="checkbox" data-id="ToiletMale-toilet"> Clean toilets (x2)</label></li>
+          <li><label><input type="checkbox" data-id="ToiletMale-mop"> Mop floor</label></li>
+          <li><label><input type="checkbox" data-id="ToiletMale-wipe-door"> Wipe door handles &amp; locks</label></li>
           <!-- Refill item properly wrapping the sub-list -->
-          <li><label><input type="checkbox"> Refill</label>
+          <li><label><input type="checkbox" data-id="ToiletMale-refills"> Refill</label>
             <ul class="sub-refill">
               <li>Hand soap</li>
               <li>Paper towels</li>
@@ -172,58 +173,58 @@
   <details class="room">
     <summary>Auditorium</summary>
     <ul>
-      <li><label><input type="checkbox"> Vacuum main hall &amp; stage</label></li>
-      <li><label><input type="checkbox"> Empty bin (music desk)</label></li>
+      <li><label><input type="checkbox" data-id="Auditorium-vacuum"> Vacuum main hall &amp; stage</label></li>
+      <li><label><input type="checkbox" data-id="Auditorium-bins"> Empty bin (music desk)</label></li>
     </ul>
   </details>
 
   <details class="room">
     <summary>Stairs</summary>
     <ul>
-      <li><label><input type="checkbox"> Vacuum</label></li>
-      <li><label><input type="checkbox"> Wipe railing</label></li>
+      <li><label><input type="checkbox" data-id="Stairs-vacuum"> Vacuum</label></li>
+      <li><label><input type="checkbox" data-id="Stairs-railing"> Wipe railing</label></li>
     </ul>
   </details>
 
   <details class="room">
     <summary>Parents room</summary>
     <ul>
-      <li><label><input type="checkbox"> Empty bin</label></li>
-      <li><label><input type="checkbox"> Wipe glass table &amp; windows</label></li>
-      <li><label><input type="checkbox"> Vacuum</label></li>
-      <li><label><input type="checkbox"> Pickup toys and small objects</label></li>
+      <li><label><input type="checkbox" data-id="ParentsRm-bins"> Empty bin</label></li>
+      <li><label><input type="checkbox" data-id="ParentsRm-table"> Wipe glass table &amp; windows</label></li>
+      <li><label><input type="checkbox" data-id="ParentsRm-vacuum"> Vacuum</label></li>
+      <li><label><input type="checkbox" data-id="ParentsRm-toys"> Pickup toys and small objects</label></li>
     </ul>
   </details>
 
   <details class="room">
     <summary>Offices - Admin & Tom</summary>
     <ul>
-      <li><label><input type="checkbox"> Empty bins &amp; shredder</label></li>
-      <li><label><input type="checkbox"> Wipe surfaces</label></li>
-      <li><label><input type="checkbox"> Vacuum</label></li>
+      <li><label><input type="checkbox" data-id="Offices-bins"> Empty bins &amp; shredder</label></li>
+      <li><label><input type="checkbox" data-id="Offices-wipe"> Wipe surfaces</label></li>
+      <li><label><input type="checkbox" data-id="Offices-vacuum"> Vacuum</label></li>
     </ul>
   </details>
 
   <details class="room">
     <summary>Upstairs hallway and room 1 & 2</summary>
     <ul>
-      <li><label><input type="checkbox"> Empty bins</label></li>
-      <li><label><input type="checkbox"> Vacuum</label></li>
+      <li><label><input type="checkbox" data-id="upstairs-bins"> Empty bins</label></li>
+      <li><label><input type="checkbox" data-id="upstairs-vacuum"> Vacuum</label></li>
     </ul>
   </details>
 
   <details class="room">
     <summary>Pre-lockup tasks</summary>
     <ul>
-      <li><label><input type="checkbox"> All lights off</label></li>
-      <li><label><input type="checkbox"> All airconditioners off</label></li>
-      <li><label><input type="checkbox"> Handpaper and toilet key back on hook</label></li>
-      <li><label><input type="checkbox"> Post in chat any low stock items</label></li>
+      <li><label><input type="checkbox" data-id="lockup-lights"> All lights off</label></li>
+      <li><label><input type="checkbox" data-id="lockup-AC"> All airconditioners off</label></li>
+      <li><label><input type="checkbox" data-id="lockup-keys"> Handpaper and toilet key back on hook</label></li>
+      <li><label><input type="checkbox" data-id="lockup-stock"> Post in chat any low stock items</label></li>
     </ul>
   </details>
 
   <p style="text-align:center;">
-  <a href="schedule.html">📅 View Monthly Cleaning Schedule</a>
+  <a href="https://blueskyranger.github.io/HRBCleaningV2/schedule.html">📅 View Monthly Cleaning Schedule V2</a>
 </p>
 
   # FireBase Code with sign-in and State Store
