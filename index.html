@@ -237,6 +237,7 @@
     getFirestore,
     doc,
     onSnapshot,
+    getDoc,
     setDoc,
     updateDoc,
     serverTimestamp
@@ -278,7 +279,15 @@
   let applyingRemoteState = false;
 
   // Ensure the doc exists (safe even if it already exists)
-  await setDoc(checklistRef, { state: {}, updatedAt: serverTimestamp() }, { merge: true });
+  const existing = await getDoc(checklistRef);
+
+    if (!existing.exists()) {
+      await setDoc(checklistRef, {
+    state: {},
+    updatedAt: serverTimestamp()
+  });
+    console.log("📄 Created new checklist doc");
+}
 
   // 1) Firestore → UI (live)
   onSnapshot(checklistRef, (snap) => {
