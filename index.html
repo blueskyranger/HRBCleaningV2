@@ -83,7 +83,7 @@
 <body>
   <h1>Cleaning Checklist v2.1</h1>
 
-  <button id="clearAll">Clear All</button>
+  <button id="clearAll" type="button">Clear All Checkboxes</button>
 
   <details class="room">
     <summary>Foyer</summary>
@@ -337,20 +337,23 @@
     });
   }
 
-  document.getElementById("clearAll").addEventListener("click", () => {
+document.getElementById("clearAll").addEventListener("click", async () => {
+  const updates = {};
 
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-  checkboxes.forEach(cb => {
+  for (const cb of checkboxes) {
     cb.checked = false;
+    updates[`state.${cb.dataset.id}`] = false;
+  }
 
-// update Firestore
-    const id = cb.dataset.id;
-    updateDoc(docRef, {
-      [id]: false
+  try {
+    await updateDoc(checklistRef, {
+      ...updates,
+      updatedAt: serverTimestamp()
     });
-  });
-
+    console.log("🧹 Cleared all checkboxes");
+  } catch (err) {
+    console.error("Clear all failed:", err.code, err.message);
+  }
 });
 </script>
 
