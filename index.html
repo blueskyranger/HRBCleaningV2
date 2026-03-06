@@ -83,6 +83,8 @@
 <body>
   <h1>Cleaning Checklist v2.1</h1>
 
+  <button id="clearAll">Clear All</button>
+
   <details class="room">
     <summary>Foyer</summary>
     <ul>
@@ -334,6 +336,22 @@
       }
     });
   }
+
+  document.getElementById("clearAll").addEventListener("click", () => {
+
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+  checkboxes.forEach(cb => {
+    cb.checked = false;
+
+// update Firestore
+    const id = cb.dataset.id;
+    updateDoc(docRef, {
+      [id]: false
+    });
+  });
+
+});
 </script>
 
 
