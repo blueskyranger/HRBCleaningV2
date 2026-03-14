@@ -397,30 +397,6 @@ document.getElementById("clearAll").addEventListener("click", async () => {
   }
 });
 
-document.getElementById("clearAll").addEventListener("click", async () => {
-  const confirmed = confirm("Are you sure you want to clear the weekly checklist? This will untick every box for everyone.");
-
-  if (!confirmed) {
-    return;
-  }
-
-  const updates = {};
-
-  for (const cb of checkboxes) {
-    cb.checked = false;
-    updates[`state.${cb.dataset.id}`] = false;
-  }
-
-  try {
-    await updateDoc(checklistRef, {
-      ...updates,
-      updatedAt: serverTimestamp()
-    });
-    console.log("🧹 Cleared all checkboxes");
-  } catch (err) {
-    console.error("Clear all failed:", err.code, err.message);
-  }
-});
 </script>
 
 
