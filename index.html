@@ -285,45 +285,55 @@
     appId: "1:30392652789:web:e4c0fc5202299cc4df46bc"
   };
 
-  const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-  // --- Auth ---
-  const auth = getAuth(app);
-  onAuthStateChanged(auth, (user) => {
-    if (user) console.log("✅ Signed in. uid:", user.uid);
-  });
-  signInAnonymously(auth).catch((err) => {
-    console.error("Anonymous sign-in failed:", err.code, err.message);
-  });
+// --- Auth ---
+const auth = getAuth(app);
 
-  // --- Firestore ---
-  const db = getFirestore(app);
-
-  const params = new URLSearchParams(location.search);
-  const listId = params.get("list") || "default";
-  const checklistRef = doc(db, "checklists", listId);
-
-  console.log("Listening to checklist:", listId);
-
-  // Grab all checkboxes that participate in sync
-  const checkboxes = Array.from(document.querySelectorAll('input[type="checkbox"][data-id]'));
-
-  // Prevent “echo” writes when we apply remote state
-  let applyingRemoteState = false;
-
-  // Ensure the doc exists (safe even if it already exists)
-  const existing = await getDoc(checklistRef);
-
-    if (!existing.exists()) {
-      await setDoc(checklistRef, {
-    state: {},
-    updatedAt: serverTimestamp()
-  });
-    console.log("📄 Created new checklist doc");
+try {
+  const cred = await signInAnonymously(auth);
+  console.log("✅ Signed in. uid:", cred.user.uid);
+} catch (err) {
+  console.error("Anonymous sign-in failed:", err.code, err.message);
+  throw err;
 }
 
-  // 1) Firestore → UI (live)
-  onSnapshot(checklistRef, (snap) => {
+// --- Firestore ---
+const db = getFirestore(app);
+
+const params = new URLSearchParams(location.search);
+const listId = params.get("list") || "default";
+const checklistRef = doc(db, "checklists", listId);
+
+console.log("Listening to checklist:", listId);
+
+// Grab all checkboxes that participate in sync
+const checkboxes = Array.from(
+  document.querySelectorAll('input[type="checkbox"][data-id]')
+);
+
+// Prevent “echo” writes when we apply remote state
+let applyingRemoteState = false;
+
+// Ensure the doc exists
+try {
+  const existing = await getDoc(checklistRef);
+
+  if (!existing.exists()) {
+    await setDoc(checklistRef, {
+      state: {},
+      updatedAt: serverTimestamp()
+    });
+    console.log("📄 Created new checklist doc");
+  }
+} catch (err) {
+  console.error("Initial Firestore read failed:", err.code, err.message);
+}
+
+// 1) Firestore → UI
+onSnapshot(
+  checklistRef,
+  (snap) => {
     if (!snap.exists()) return;
 
     const data = snap.data();
@@ -337,28 +347,55 @@
     applyingRemoteState = false;
 
     console.log("📥 Applied Firestore state");
-  }, (err) => {
+  },
+  (err) => {
     console.error("onSnapshot error:", err.code, err.message);
-  });
-
-  // 2) UI → Firestore (on change)
-  for (const cb of checkboxes) {
-    cb.addEventListener("change", async () => {
-      if (applyingRemoteState) return;
-
-      const id = cb.dataset.id;
-
-      try {
-        await updateDoc(checklistRef, {
-          [`state.${id}`]: cb.checked,
-          updatedAt: serverTimestamp()
-        });
-        console.log("📤 Saved:", id, cb.checked);
-      } catch (err) {
-        console.error("Save failed:", err.code, err.message);
-      }
-    });
   }
+);
+
+// 2) UI → Firestore
+for (const cb of checkboxes) {
+  cb.addEventListener("change", async () => {
+    if (applyingRemoteState) return;
+
+    const id = cb.dataset.id;
+
+    try {
+      await updateDoc(checklistRef, {
+        [`state.${id}`]: cb.checked,
+        updatedAt: serverTimestamp()
+      });
+      console.log("📤 Saved:", id, cb.checked);
+    } catch (err) {
+      console.error("Save failed:", err.code, err.message);
+    }
+  });
+}
+
+document.getElementById("clearAll").addEventListener("click", async () => {
+  const confirmed = confirm(
+    "Are you sure you want to clear the weekly checklist? This will untick every box for everyone."
+  );
+
+  if (!confirmed) return;
+
+  const updates = {};
+
+  for (const cb of checkboxes) {
+    cb.checked = false;
+    updates[`state.${cb.dataset.id}`] = false;
+  }
+
+  try {
+    await updateDoc(checklistRef, {
+      ...updates,
+      updatedAt: serverTimestamp()
+    });
+    console.log("🧹 Cleared all checkboxes");
+  } catch (err) {
+    console.error("Clear all failed:", err.code, err.message);
+  }
+});
 
 document.getElementById("clearAll").addEventListener("click", async () => {
   const confirmed = confirm("Are you sure you want to clear the weekly checklist? This will untick every box for everyone.");
