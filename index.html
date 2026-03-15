@@ -79,8 +79,7 @@
     }
 
     .clear-btn {
-      display: block;
-      margin: 0 auto 20px auto;
+      margin-bottom: 20px;
       padding: 12px 20px;
       font-size: 16px;
       font-weight: bold;
@@ -100,13 +99,39 @@
 .clear-btn:active {
   transform: scale(0.98);
 }
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.save-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #2e7d32;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.save-btn:hover {
+  background-color: #1b5e20;
+}
   </style>
 </head>
 
 <body>
   <h1>Cleaning Checklist v2.2</h1>
 
+<div class="button-row">
+  <button id="saveWeeklyReportBtn" class="save-btn">Save Weekly Report</button>
   <button id="clearAll" type="button" class="clear-btn">Clear Weekly Checklist</button>
+</div>
 
   <details class="room">
     <summary>Foyer</summary>
@@ -268,6 +293,7 @@
 
   import {
     getFirestore,
+    collection,
     doc,
     onSnapshot,
     getDoc,
@@ -360,6 +386,7 @@
     });
   }
 
+  // 3) clear button code
 document.getElementById("clearAll").addEventListener("click", async () => {
   const confirmed = confirm("Are you sure you want to clear the weekly checklist? This will untick every box for everyone.");
 
@@ -384,9 +411,50 @@ document.getElementById("clearAll").addEventListener("click", async () => {
     console.error("Clear all failed:", err.code, err.message);
   }
 });
+
+  // 4) Save weekly Report Function
+async function saveWeeklyReport() {
+  const confirmed = confirm("Save this week's checklist as a historical report?");
+  if (!confirmed) return;
+
+  try {
+    const snap = await getDoc(checklistRef);
+
+    if (!snap.exists()) {
+      alert("No checklist data found to save.");
+      return;
+    }
+
+    const data = snap.data();
+    const checks = data.checks || {};
+
+    const totalTasks = Object.keys(checks).length;
+    const completedTasks = Object.values(checks).filter(v => v === true).length;
+    const completedPercent = totalTasks > 0
+      ? Math.round((completedTasks / totalTasks) * 100)
+      : 0;
+
+    const today = new Date();
+    const weekEnding = today.toISOString().split("T")[0];
+
+    const reportRef = doc(db, "reports", weekEnding);
+
+    await setDoc(reportRef, {
+      weekEnding,
+      savedAt: serverTimestamp(),
+      checks,
+      totalTasks,
+      completedTasks,
+      completedPercent
+    });
+
+    alert(`Weekly report saved for ${weekEnding}`);
+  } catch (error) {
+    console.error("Failed to save weekly report:", error);
+    alert("Could not save weekly report.");
+  }
+}  
 </script>
-
-
 
 </body>
 </html>
