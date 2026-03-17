@@ -39,13 +39,27 @@
       text-align: center;
     }
 
+    select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+    input[type="text"] {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 180px;
+  }
+
     </style>
 </head>
 <body>
 
     <h1>Stock Items</h1>
 
-    <table>
+<table>
         <thead>
             <tr>
                 <th>Name</th>
@@ -53,54 +67,113 @@
                 <th>Comment</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>Toilet Paper</td>
-                <td class="quantity">50</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Paper Hand Towels</td>
-                <td class="quantity">30</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Womans Products</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Bin Bags</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Hand Soap</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Toilet Duck</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Bleach</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Gloves</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-            <tr>
-                <td>Spray and Wipe</td>
-                <td class="quantity">20</td>
-                <td>No Comment</td>
-            </tr>
-        </tbody>
-    </table>
+    <tbody>
+            <td>Toilet Paper</td>
+      <td>
+        <select name="toilet-paper">
+          <option>0</option>
+          <option>10</option>
+          <option>20</option>
+          <option>30</option>
+          <option>40</option>
+          <option selected>50</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="No Comment"></td>
+    </tr>
+
+    <tr>
+      <td>Paper Hand Towels</td>
+      <td>
+        <select name="paper-towels">
+          <option>0</option>
+          <option>10</option>
+          <option>20</option>
+          <option selected>30</option>
+          <option>40</option>
+          <option>50</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="No Comment"></td>
+    </tr>
+
+    <tr>
+      <td>Womans Products</td>
+      <td>
+        <select name="womans-products">
+          <option>0</option>
+          <option>5</option>
+          <option>10</option>
+          <option>15</option>
+          <option selected>20</option>
+          <option>25</option>
+          <option>30</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="No Comment"></td>
+    </tr>
+    <td>Toilet Paper</td>
+      <td>
+        <select name="Bin Bags">
+          <option>0</option>
+          <option>10</option>
+          <option>20</option>
+          <option>30</option>
+          <option>40</option>
+          <option selected>50</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="No Comment"></td>
+    </tr>
+
+    <tr>
+      <td>Toilet Duck</td>
+      <td>
+        <select name="paper-towels">
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option selected>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="No Comment"></td>
+    </tr>
+
+    <tr>
+      <td>Hand Soap</td>
+      <td>
+        <select name="hand soap">
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option selected>4</option>
+          <option>5</option>
+          <option>6</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="Litres - estimated"></td>
+    </tr>
+    
+    <tr>
+      <td>Spray and Wipe</td>
+      <td>
+        <select name="spray and wipe">
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option selected>4</option>
+          <option>5</option>
+          <option>6</option>
+        </select>
+      </td>
+      <td><input type="text" placeholder="Bottles"></td>
+    </tr>
+    </tbody>
+</table>
 
   <a class="back-link" href="index.html">⬅ Back to Cleaning Checklist</a>
 
