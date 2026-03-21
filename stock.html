@@ -68,114 +68,269 @@
             </tr>
         </thead>
     <tbody>
-            <td>Toilet Paper</td>
+
+    <tr>
+      <td>Toilet Paper</td>
       <td>
-        <select name="toilet-paper">
-          <option>0</option>
-          <option>10</option>
-          <option>20</option>
-          <option>30</option>
-          <option>40</option>
-          <option selected>50</option>
+        <select data-id="toilet-paper">
+          <option value="0">0</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50" selected>50</option>
         </select>
       </td>
-      <td><input type="text" placeholder="No Comment"></td>
+      <td><input type="text" data-id="toilet-paper-comment" placeholder="No Comment"></td>
     </tr>
 
     <tr>
       <td>Paper Hand Towels</td>
       <td>
-        <select name="paper-towels">
-          <option>0</option>
-          <option>10</option>
-          <option>20</option>
-          <option selected>30</option>
-          <option>40</option>
-          <option>50</option>
+        <select data-id="paper-hand-towels">
+          <option value="0">0</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30" selected>30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
         </select>
       </td>
-      <td><input type="text" placeholder="No Comment"></td>
+      <td><input type="text" data-id="paper-hand-towels-comment" placeholder="No Comment"></td>
     </tr>
 
     <tr>
       <td>Womans Products</td>
       <td>
-        <select name="womans-products">
-          <option>0</option>
-          <option>5</option>
-          <option>10</option>
-          <option>15</option>
-          <option selected>20</option>
-          <option>25</option>
-          <option>30</option>
+        <select data-id="womans-products">
+          <option value="0">0</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20" selected>20</option>
+          <option value="25">25</option>
+          <option value="30">30</option>
         </select>
       </td>
-      <td><input type="text" placeholder="No Comment"></td>
+      <td><input type="text" data-id="womans-products-comment" placeholder="No Comment"></td>
     </tr>
-    <td>Toilet Paper</td>
+
+    <tr>
+    <td>Bin Bags</td>
       <td>
-        <select name="Bin Bags">
-          <option>0</option>
-          <option>10</option>
-          <option>20</option>
-          <option>30</option>
-          <option>40</option>
-          <option selected>50</option>
+        <select data-id="bin-bags">
+          <option value="0">0</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option  value="50" selected>50</option>
         </select>
       </td>
-      <td><input type="text" placeholder="No Comment"></td>
+      <td><input type="text" data-id="bin-bags-comment" placeholder="No Comment"></td>
     </tr>
 
     <tr>
       <td>Toilet Duck</td>
       <td>
-        <select name="paper-towels">
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-          <option selected>3</option>
-          <option>4</option>
-          <option>5</option>
+        <select data-id="toilet-duck">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
         </select>
       </td>
-      <td><input type="text" placeholder="No Comment"></td>
+      <td><input type="text" data-id="toilet-duck-comment" placeholder="No Comment"></td>
     </tr>
 
     <tr>
       <td>Hand Soap</td>
       <td>
-        <select name="hand soap">
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option selected>4</option>
-          <option>5</option>
-          <option>6</option>
+        <select data-id="hand-soap">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
         </select>
       </td>
-      <td><input type="text" placeholder="Litres - estimated"></td>
+      <td><input type="text"  data-id="hand-soap-comment" placeholder="Litres - estimated"></td>
     </tr>
     
     <tr>
       <td>Spray and Wipe</td>
       <td>
-        <select name="spray and wipe">
-          <option>0</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option selected>4</option>
-          <option>5</option>
-          <option>6</option>
+        <select data-id="spray-and-wipe">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4" selected>4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
         </select>
       </td>
-      <td><input type="text" placeholder="Bottles"></td>
+      <td><input type="text"  data-id="spray-and-wipe-comment" placeholder="Bottles"></td>
     </tr>
     </tbody>
 </table>
 
   <a class="back-link" href="index.html">⬅ Back to Cleaning Checklist</a>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+  import { getAuth, signInAnonymously }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+  import {
+    getFirestore,
+    doc,
+    onSnapshot,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAwyzLorHfENmCOVr3B1q4FhUn7sI565cI",
+    authDomain: "hrb-cleaning-v2.firebaseapp.com",
+    projectId: "hrb-cleaning-v2",
+    storageBucket: "hrb-cleaning-v2.firebasestorage.app",
+    messagingSenderId: "30392652789",
+    appId: "1:30392652789:web:e4c0fc5202299cc4df46bc"
+  };
+
+  const app = initializeApp(firebaseConfig);
+
+  // --- Auth ---
+  const auth = getAuth(app);
+
+  try {
+    const cred = await signInAnonymously(auth);
+    console.log("✅ Signed in. uid:", cred.user.uid);
+  } catch (err) {
+    console.error("Anonymous sign-in failed:", err.code, err.message);
+    throw err;
+  }
+
+  // --- Firestore ---
+  const db = getFirestore(app);
+
+  // Stock saves here
+  const stockRef = doc(db, "stock", "current");
+
+  const quantityFields = Array.from(
+    document.querySelectorAll("select[data-id]")
+  );
+
+  const commentFields = Array.from(
+    document.querySelectorAll('input[type="text"][data-id]')
+  );
+
+  let applyingRemoteState = false;
+
+  // Ensure the doc exists
+  try {
+    const existing = await getDoc(stockRef);
+
+    if (!existing.exists()) {
+      const initialData = {
+        items: {},
+        updatedAt: serverTimestamp()
+      };
+
+      for (const field of quantityFields) {
+        initialData.items[field.dataset.id] = field.value;
+      }
+
+      for (const field of commentFields) {
+        initialData.items[field.dataset.id] = field.value || "";
+      }
+
+      await setDoc(stockRef, initialData);
+      console.log("📄 Created new stock doc");
+    }
+  } catch (err) {
+    console.error("Initial Firestore read failed:", err.code, err.message);
+  }
+
+  // Firestore → UI
+  onSnapshot(
+    stockRef,
+    (snap) => {
+      if (!snap.exists()) return;
+
+      const data = snap.data();
+      const items = data.items || {};
+
+      applyingRemoteState = true;
+
+      for (const field of quantityFields) {
+        const id = field.dataset.id;
+        if (items[id] !== undefined) {
+          field.value = items[id];
+        }
+      }
+
+      for (const field of commentFields) {
+        const id = field.dataset.id;
+        if (items[id] !== undefined) {
+          field.value = items[id];
+        }
+      }
+
+      applyingRemoteState = false;
+      console.log("📥 Applied Firestore stock state");
+    },
+    (err) => {
+      console.error("onSnapshot error:", err.code, err.message);
+    }
+  );
+
+  // UI → Firestore for dropdowns
+  for (const field of quantityFields) {
+    field.addEventListener("change", async () => {
+      if (applyingRemoteState) return;
+
+      const id = field.dataset.id;
+
+      try {
+        await updateDoc(stockRef, {
+          [`items.${id}`]: field.value,
+          updatedAt: serverTimestamp()
+        });
+        console.log("📤 Saved quantity:", id, field.value);
+      } catch (err) {
+        console.error("Save failed:", err.code, err.message);
+      }
+    });
+  }
+
+  // UI → Firestore for comments
+  for (const field of commentFields) {
+    field.addEventListener("input", async () => {
+      if (applyingRemoteState) return;
+
+      const id = field.dataset.id;
+
+      try {
+        await updateDoc(stockRef, {
+          [`items.${id}`]: field.value,
+          updatedAt: serverTimestamp()
+        });
+        console.log("📤 Saved comment:", id, field.value);
+      } catch (err) {
+        console.error("Save failed:", err.code, err.message);
+      }
+    });
+  }
+</script>
 
 </body>
 </html>
