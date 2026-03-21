@@ -53,6 +53,12 @@
     width: 180px;
   }
 
+  .low-stock {
+  background-color: #ffebee;
+  color: #c62828;
+  font-weight: bold;
+}
+
     </style>
 </head>
 <body>
@@ -233,6 +239,17 @@
     document.querySelectorAll('input[type="text"][data-id]')
   );
 
+  // Style change when quantities get low
+  function updateStockStyle(field) {
+  const value = parseInt(field.value);
+
+  if (value <= 10) {
+    field.classList.add("low-stock");
+  } else {
+    field.classList.remove("low-stock");
+  }
+}
+
   let applyingRemoteState = false;
 
   // Ensure the doc exists
@@ -275,6 +292,7 @@
         const id = field.dataset.id;
         if (items[id] !== undefined) {
           field.value = items[id];
+          updateStockStyle(field);
         }
       }
 
@@ -294,23 +312,25 @@
   );
 
   // UI → Firestore for dropdowns
-  for (const field of quantityFields) {
-    field.addEventListener("change", async () => {
-      if (applyingRemoteState) return;
+for (const field of quantityFields) {
+  field.addEventListener("change", async () => {
+    if (applyingRemoteState) return;
 
-      const id = field.dataset.id;
+    const id = field.dataset.id;
 
-      try {
-        await updateDoc(stockRef, {
-          [`items.${id}`]: field.value,
-          updatedAt: serverTimestamp()
-        });
-        console.log("📤 Saved quantity:", id, field.value);
-      } catch (err) {
-        console.error("Save failed:", err.code, err.message);
-      }
-    });
-  }
+    updateStockStyle(field); // ADD THIS LINE
+
+    try {
+      await updateDoc(stockRef, {
+        [`items.${id}`]: field.value,
+        updatedAt: serverTimestamp()
+      });
+      console.log("📤 Saved quantity:", id, field.value);
+    } catch (err) {
+      console.error("Save failed:", err.code, err.message);
+    }
+  });
+}
 
   // UI → Firestore for comments
   for (const field of commentFields) {
@@ -330,6 +350,10 @@
       }
     });
   }
+
+  for (const field of quantityFields) {
+  updateStockStyle(field);
+}
 </script>
 
 </body>
