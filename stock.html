@@ -240,10 +240,11 @@
   );
 
   // Style change when quantities get low
-  function updateStockStyle(field) {
-  const value = parseInt(field.value);
+function updateStockStyle(field) {
+  const value = parseInt(field.value, 10);
+  const lowThreshold = parseInt(field.dataset.low, 10);
 
-  if (value <= 10) {
+  if (value <= lowThreshold) {
     field.classList.add("low-stock");
   } else {
     field.classList.remove("low-stock");
@@ -318,7 +319,7 @@ for (const field of quantityFields) {
 
     const id = field.dataset.id;
 
-    updateStockStyle(field); // ADD THIS LINE
+    updateStockStyle(field);
 
     try {
       await updateDoc(stockRef, {
