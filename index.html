@@ -108,6 +108,7 @@
 }
 
 .save-btn {
+  margin-bottom: 20px;
   padding: 12px 20px;
   font-size: 16px;
   font-weight: bold;
@@ -122,15 +123,20 @@
 .save-btn:hover {
   background-color: #1b5e20;
 }
+
+.link-column a {
+  display: block;       /* 👈 THIS forces them onto new lines */
+  margin-bottom: 10px;  /* spacing */
+}
   </style>
 </head>
 
 <body>
   <h1>Cleaning Checklist v2.2</h1>
 
-<div class="button-row">
-  <button id="saveWeeklyReportBtn" class="save-btn">Save Weekly Report</button>
-  <button id="clearAll" type="button" class="clear-btn">Clear Weekly Checklist</button>
+<div class="link-column">
+  <a href="schedule.html">View Monthly Cleaning Schedule</a>
+  <a href="stock.html">View Stock Items</a>
 </div>
 
   <details class="room">
