@@ -139,6 +139,13 @@
   text-align: center;
   font-size: 13px;
   color: #888;
+  margin-bottom: 4px;
+}
+
+.progress {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
   margin-bottom: 16px;
 }
 
@@ -159,6 +166,7 @@
 </div>
 
 <p class="last-updated" id="last-updated">Last updated: —</p>
+<p class="progress" id="progress">Progress: — of — tasks completed</p>
 
   <details class="room">
     <summary>Foyer</summary>
@@ -375,6 +383,14 @@ const checkboxes = Array.from(
   document.querySelectorAll('input[type="checkbox"][data-id]')
 );
 
+// Updates the “X of Y tasks completed” counter
+function updateProgress() {
+  const completed = checkboxes.filter(cb => cb.checked).length;
+  const total = checkboxes.length;
+  document.getElementById(“progress”).textContent =
+    `Progress: ${completed} of ${total} tasks completed`;
+}
+
 // Prevent “echo” writes when we apply remote state
 let applyingRemoteState = false;
 
@@ -408,6 +424,7 @@ onSnapshot(
       cb.checked = !!state[id];
     }
     applyingRemoteState = false;
+    updateProgress();
 
     if (data.updatedAt) {
       const date = data.updatedAt.toDate();
@@ -431,6 +448,7 @@ for (const cb of checkboxes) {
     if (applyingRemoteState) return;
 
     const id = cb.dataset.id;
+    updateProgress();
 
     try {
       await updateDoc(checklistRef, {
