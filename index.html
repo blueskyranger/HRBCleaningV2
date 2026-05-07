@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cleaning Checklist v2.3</title>
+  <title>Cleaning Checklist v3.0</title>
 
   <style>
     body {
@@ -164,15 +164,10 @@
 </head>
 
 <body>
-  <h1>Cleaning Checklist v2.3</h1>
+  <h1>Cleaning Checklist v3.0</h1>
 
 <div class="team-banner">
   <strong>This week's team:</strong> <span id="current-team">Loading...</span>
-</div>
-
-<div class="button-row">
-  <button id="saveWeeklyReportBtn" class="save-btn">Save Weekly Report</button>
-  <button id="clearAll" type="button" class="clear-btn">Clear Weekly Checklist</button>
 </div>
 
 <p class="last-updated" id="last-updated">Last updated: —</p>
@@ -325,6 +320,10 @@
       <li><label><input type="checkbox" data-id="lockup-stock"> Update stock items status page</label></li>
     </ul>
   </details>
+
+<div class="button-row">
+  <button id="saveAndClearBtn" class="save-btn">Save &amp; Clear Weekly Checklist</button>
+</div>
 
 <p style="text-align:center;">
   <a href="https://blueskyranger.github.io/HRBCleaningV2/schedule.html" style="display:block; margin-bottom:10px;">
@@ -493,76 +492,60 @@ for (const cb of checkboxes) {
   });
 }
 
-  // 3) clear button code
-document.getElementById("clearAll").addEventListener("click", async () => {
-  const confirmed = confirm(
-    "Are you sure you want to clear the weekly checklist? This will untick every box for everyone."
-  );
+  // 3) Save & Clear button — saves a report to Firestore, then clears all checkboxes
+  document.getElementById("saveAndClearBtn").addEventListener("click", async () => {
+    const confirmed = confirm(
+      "Save this week's report and clear the checklist? This will untick every box for everyone."
+    );
+    if (!confirmed) return;
 
-  if (!confirmed) return;
+    try {
+      // Step 1: read the current checklist state
+      const snap = await getDoc(checklistRef);
+      if (!snap.exists()) {
+        alert("No checklist data found to save.");
+        return;
+      }
 
-  const updates = {};
+      const data = snap.data();
+      const state = data.state || {};
+      const totalTasks = checkboxes.length;
+      const completedTasks = Object.values(state).filter(v => v === true).length;
+      const completedPercent = totalTasks > 0
+        ? Math.round((completedTasks / totalTasks) * 100)
+        : 0;
 
-  for (const cb of checkboxes) {
-    cb.checked = false;
-    updates[`state.${cb.dataset.id}`] = false;
-  }
+      const weekEnding = new Date().toISOString().split("T")[0];
 
-  try {
-    await updateDoc(checklistRef, {
-      ...updates,
-      updatedAt: serverTimestamp()
-    });
-    console.log("🧹 Cleared all checkboxes");
-  } catch (err) {
-    console.error("Clear all failed:", err.code, err.message);
-  }
-});
+      // Step 2: save the report — if this fails, we stop before clearing
+      await setDoc(doc(db, "reports", weekEnding), {
+        weekEnding,
+        savedAt: serverTimestamp(),
+        state,
+        totalTasks,
+        completedTasks,
+        completedPercent
+      });
 
-  // 4) Save weekly Report Function
-  document.getElementById("saveWeeklyReportBtn").addEventListener("click", saveWeeklyReport);
+      // Step 3: clear all checkboxes
+      const updates = {};
+      for (const cb of checkboxes) {
+        cb.checked = false;
+        updates[`state.${cb.dataset.id}`] = false;
+      }
 
-async function saveWeeklyReport() {
-  const confirmed = confirm("Save this week's checklist as a historical report?");
-  if (!confirmed) return;
+      await updateDoc(checklistRef, {
+        ...updates,
+        updatedAt: serverTimestamp()
+      });
 
-  try {
-    const snap = await getDoc(checklistRef);
-
-    if (!snap.exists()) {
-      alert("No checklist data found to save.");
-      return;
+      updateProgress();
+      alert(`Weekly report saved and checklist cleared for ${weekEnding}.`);
+    } catch (err) {
+      console.error("Save & clear failed:", err.code, err.message);
+      alert("Something went wrong. The checklist has not been cleared.");
     }
-
-    const data = snap.data();
-    const checks = data.state || {};
-
-    const totalTasks = Object.keys(checks).length;
-    const completedTasks = Object.values(checks).filter(v => v === true).length;
-    const completedPercent = totalTasks > 0
-      ? Math.round((completedTasks / totalTasks) * 100)
-      : 0;
-
-    const today = new Date();
-    const weekEnding = today.toISOString().split("T")[0];
-
-    const reportRef = doc(db, "reports", weekEnding);
-
-    await setDoc(reportRef, {
-      weekEnding,
-      savedAt: serverTimestamp(),
-      checks,
-      totalTasks,
-      completedTasks,
-      completedPercent
-    });
-
-    alert(`Weekly report saved for ${weekEnding}`);
-  } catch (error) {
-    console.error("Failed to save weekly report:", error);
-    alert("Could not save weekly report.");
-  }
-}  
+  });
 </script>
 
 <script type="module">
