@@ -159,6 +159,29 @@
   padding: 2px 8px;
 }
 
+.undo-banner {
+  display: none;
+  text-align: center;
+  background-color: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.undo-btn {
+  margin-left: 10px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  background-color: #e65100;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 
   </style>
 </head>
@@ -323,6 +346,12 @@
 
 <div class="button-row">
   <button id="saveAndClearBtn" class="save-btn">Save &amp; Clear Weekly Checklist</button>
+</div>
+
+<div class="undo-banner" id="undo-banner">
+  Checklist cleared.
+  <button class="undo-btn" id="undoBtn">Undo</button>
+  (<span id="undo-countdown">10</span>s)
 </div>
 
 <p style="text-align:center;">
@@ -492,7 +521,17 @@ for (const cb of checkboxes) {
   });
 }
 
-  // 3) Save & Clear button — saves a report to Firestore, then clears all checkboxes
+  // Holds references so the undo button can cancel the pending Firestore clear
+  let undoTimer = null;
+  let undoInterval = null;
+  let previousState = {};
+
+  function hideUndoBanner() {
+    document.getElementById("undo-banner").style.display = "none";
+    clearInterval(undoInterval);
+  }
+
+  // 3) Save & Clear button — saves report, clears screen, then waits 10s before writing to Firestore
   document.getElementById("saveAndClearBtn").addEventListener("click", async () => {
     const confirmed = confirm(
       "Save this week's report and clear the checklist? This will untick every box for everyone."
@@ -500,7 +539,7 @@ for (const cb of checkboxes) {
     if (!confirmed) return;
 
     try {
-      // Step 1: read the current checklist state
+      // Step 1: read current checklist state from Firestore
       const snap = await getDoc(checklistRef);
       if (!snap.exists()) {
         alert("No checklist data found to save.");
@@ -517,7 +556,7 @@ for (const cb of checkboxes) {
 
       const weekEnding = new Date().toISOString().split("T")[0];
 
-      // Step 2: save the report — if this fails, we stop before clearing
+      // Step 2: save the report to Firestore — if this fails we stop here, nothing is cleared
       await setDoc(doc(db, "reports", weekEnding), {
         weekEnding,
         savedAt: serverTimestamp(),
@@ -527,24 +566,56 @@ for (const cb of checkboxes) {
         completedPercent
       });
 
-      // Step 3: clear all checkboxes
-      const updates = {};
+      // Step 3: take a snapshot of current checkbox state so undo can restore it
+      previousState = {};
       for (const cb of checkboxes) {
+        previousState[cb.dataset.id] = cb.checked;
         cb.checked = false;
-        updates[`state.${cb.dataset.id}`] = false;
       }
-
-      await updateDoc(checklistRef, {
-        ...updates,
-        updatedAt: serverTimestamp()
-      });
-
       updateProgress();
-      alert(`Weekly report saved and checklist cleared for ${weekEnding}.`);
+
+      // Step 4: show the undo banner with a 10 second countdown
+      const banner = document.getElementById("undo-banner");
+      const countdownEl = document.getElementById("undo-countdown");
+      banner.style.display = "block";
+      let seconds = 10;
+      countdownEl.textContent = seconds;
+
+      // Tick the countdown down every second
+      undoInterval = setInterval(() => {
+        seconds--;
+        countdownEl.textContent = seconds;
+        if (seconds <= 0) clearInterval(undoInterval);
+      }, 1000);
+
+      // Step 5: after 10 seconds, write the clear to Firestore
+      undoTimer = setTimeout(async () => {
+        hideUndoBanner();
+        const updates = {};
+        for (const cb of checkboxes) {
+          updates[`state.${cb.dataset.id}`] = false;
+        }
+        await updateDoc(checklistRef, { ...updates, updatedAt: serverTimestamp() });
+        console.log("🧹 Checklist cleared in Firestore");
+      }, 10000);
+
     } catch (err) {
       console.error("Save & clear failed:", err.code, err.message);
       alert("Something went wrong. The checklist has not been cleared.");
     }
+  });
+
+  // Undo button — cancels the pending Firestore clear and restores the screen
+  document.getElementById("undoBtn").addEventListener("click", () => {
+    clearTimeout(undoTimer);
+    hideUndoBanner();
+
+    // Restore checkboxes to how they were before the clear
+    for (const cb of checkboxes) {
+      cb.checked = !!previousState[cb.dataset.id];
+    }
+    updateProgress();
+    console.log("↩️ Clear undone");
   });
 </script>
 
