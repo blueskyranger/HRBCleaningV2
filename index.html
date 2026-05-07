@@ -135,6 +135,13 @@
   background-color: #1b5e20;
 }
 
+.last-updated {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
 
   </style>
 </head>
@@ -150,6 +157,8 @@
   <button id="saveWeeklyReportBtn" class="save-btn">Save Weekly Report</button>
   <button id="clearAll" type="button" class="clear-btn">Clear Weekly Checklist</button>
 </div>
+
+<p class="last-updated" id="last-updated">Last updated: —</p>
 
   <details class="room">
     <summary>Foyer</summary>
@@ -399,6 +408,15 @@ onSnapshot(
       cb.checked = !!state[id];
     }
     applyingRemoteState = false;
+
+    if (data.updatedAt) {
+      const date = data.updatedAt.toDate();
+      const formatted = date.toLocaleString("en-AU", {
+        weekday: "long", day: "numeric", month: "long",
+        year: "numeric", hour: "numeric", minute: "2-digit"
+      });
+      document.getElementById("last-updated").textContent = `Last updated: ${formatted}`;
+    }
 
     console.log("📥 Applied Firestore state");
   },
