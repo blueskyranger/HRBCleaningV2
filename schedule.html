@@ -38,6 +38,11 @@
       display: block;
       text-align: center;
     }
+
+    .completed td {
+      text-decoration: line-through;
+      color: #aaa;
+    }
   </style>
 </head>
 
@@ -122,6 +127,22 @@
   </table>
 
   <a class="back-link" href="index.html">⬅ Back to Cleaning Checklist</a>
+
+  <script>
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Dates are in DD-MM-YYYY format
+    document.querySelectorAll("tbody tr").forEach(row => {
+      const dateText = row.cells[0].textContent.trim();
+      const [day, month, year] = dateText.split("-");
+      const rowDate = new Date(year, month - 1, day);
+
+      if (rowDate < today) {
+        row.classList.add("completed");
+      }
+    });
+  </script>
 
 </body>
 </html>
