@@ -439,6 +439,8 @@ document.getElementById("clearAll").addEventListener("click", async () => {
 });
 
   // 4) Save weekly Report Function
+  document.getElementById("saveWeeklyReportBtn").addEventListener("click", saveWeeklyReport);
+
 async function saveWeeklyReport() {
   const confirmed = confirm("Save this week's checklist as a historical report?");
   if (!confirmed) return;
@@ -452,7 +454,7 @@ async function saveWeeklyReport() {
     }
 
     const data = snap.data();
-    const checks = data.checks || {};
+    const checks = data.state || {};
 
     const totalTasks = Object.keys(checks).length;
     const completedTasks = Object.values(checks).filter(v => v === true).length;
