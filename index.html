@@ -101,6 +101,16 @@
   transform: scale(0.98);
 }
 
+.team-banner {
+  text-align: center;
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
 .button-row {
   display: flex;
   justify-content: center;
@@ -131,6 +141,10 @@
 
 <body>
   <h1>Cleaning Checklist v2.3</h1>
+
+<div class="team-banner">
+  <strong>This week's team:</strong> <span id="current-team">Loading...</span>
+</div>
 
 <div class="button-row">
   <button id="saveWeeklyReportBtn" class="save-btn">Save Weekly Report</button>
@@ -482,6 +496,19 @@ async function saveWeeklyReport() {
     alert("Could not save weekly report.");
   }
 }  
+</script>
+
+<script type="module">
+  import { schedule } from "./schedule-data.js";
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Find the first entry whose week ending date is today or in the future
+  const currentEntry = schedule.find(entry => new Date(entry.date) >= today);
+
+  const teamSpan = document.getElementById("current-team");
+  teamSpan.textContent = currentEntry ? currentEntry.team : "No team scheduled";
 </script>
 
 </body>
