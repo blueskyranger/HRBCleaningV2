@@ -149,6 +149,16 @@
   margin-bottom: 16px;
 }
 
+.room-done {
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: normal;
+  color: white;
+  background-color: #2e7d32;
+  border-radius: 12px;
+  padding: 2px 8px;
+}
+
 
   </style>
 </head>
@@ -383,12 +393,33 @@ const checkboxes = Array.from(
   document.querySelectorAll('input[type="checkbox"][data-id]')
 );
 
-// Updates the “X of Y tasks completed” counter
+// Updates the progress counter and room completion badges
 function updateProgress() {
   const completed = checkboxes.filter(cb => cb.checked).length;
   const total = checkboxes.length;
   document.getElementById(“progress”).textContent =
     `Progress: ${completed} of ${total} tasks completed`;
+
+  // Check each room — if every checkbox inside is ticked, show a Done badge
+  const rooms = document.querySelectorAll(“details.room”);
+  for (const room of rooms) {
+    const roomBoxes = Array.from(room.querySelectorAll('input[type=”checkbox”]'));
+    const allDone = roomBoxes.length > 0 && roomBoxes.every(cb => cb.checked);
+
+    const summary = room.querySelector(“summary”);
+    let badge = summary.querySelector(“.room-done”);
+
+    if (allDone && !badge) {
+      // All ticked — add the badge if it isn't there yet
+      badge = document.createElement(“span”);
+      badge.className = “room-done”;
+      badge.textContent = “✓ Done”;
+      summary.appendChild(badge);
+    } else if (!allDone && badge) {
+      // Not all ticked — remove the badge if it's there
+      badge.remove();
+    }
+  }
 }
 
 // Prevent “echo” writes when we apply remote state
