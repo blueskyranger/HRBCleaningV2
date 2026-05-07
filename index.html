@@ -426,7 +426,7 @@ function updateProgress() {
   const completed = checkboxes.filter(cb => cb.checked).length;
   const total = checkboxes.length;
   document.getElementById(“progress”).textContent =
-    `Progress: ${completed} of ${total} tasks completed`;
+    “Progress: “ + completed + “ of “ + total + “ tasks completed”;
 
   // Check each room — if every checkbox inside is ticked, show a Done badge
   const rooms = document.querySelectorAll(“details.room”);
@@ -491,7 +491,7 @@ onSnapshot(
         weekday: "long", day: "numeric", month: "long",
         year: "numeric", hour: "numeric", minute: "2-digit"
       });
-      document.getElementById("last-updated").textContent = `Last updated: ${formatted}`;
+      document.getElementById("last-updated").textContent = "Last updated: " + formatted;
     }
 
     console.log("📥 Applied Firestore state");
