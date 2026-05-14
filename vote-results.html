@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Free Weekend Results</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 { text-align: center; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th { background: #f4f4f4; }
+
+    .best-row {
+      background-color: #e8f5e9;
+    }
+
+    .best-row td {
+      font-weight: bold;
+    }
+
+    .bar-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bar {
+      display: inline-block;
+      height: 10px;
+      background-color: #2e7d32;
+      border-radius: 3px;
+      min-width: 2px;
+    }
+
+    .total-label {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 12px;
+    }
+
+    .loading {
+      text-align: center;
+      color: #888;
+      margin-top: 40px;
+    }
+
+    .back-link {
+      margin-top: 12px;
+      display: block;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Free Weekend Results</h1>
+
+  <p id="loading" class="loading">Loading...</p>
+
+  <table id="results-table" style="display:none">
+    <thead>
+      <tr>
+        <th>Saturday</th>
+        <th>AM Free</th>
+        <th>PM Free</th>
+        <th>Both Free</th>
+      </tr>
+    </thead>
+    <tbody id="results-body"></tbody>
+  </table>
+
+  <p class="total-label" id="total-label"></p>
+
+  <p style="text-align:center; margin-top:24px;">
+    <a href="https://blueskyranger.github.io/HRBCleaningV2/vote.html" class="back-link">
+      Vote / Update Your Vote
+    </a>
+    <a href="https://blueskyranger.github.io/HRBCleaningV2/" class="back-link">
+      Back to Cleaning Checklist
+    </a>
+  </p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAwyzLorHfENmCOVr3B1q4FhUn7sI565cI",
+      authDomain: "hrb-cleaning-v2.firebaseapp.com",
+      projectId: "hrb-cleaning-v2",
+      storageBucket: "hrb-cleaning-v2.firebasestorage.app",
+      messagingSenderId: "30392652789",
+      appId: "1:30392652789:web:e4c0fc5202299cc4df46bc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    try {
+      await signInAnonymously(auth);
+    } catch (err) {
+      console.error("Auth failed:", err.code, err.message);
+    }
+
+    const db = getFirestore(app);
+
+    function getNextSaturdays(count) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      const day = d.getDay();
+      d.setDate(d.getDate() + (day === 6 ? 0 : 6 - day));
+      const result = [];
+      for (let i = 0; i < count; i++) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        result.push(y + "-" + m + "-" + dd);
+        d.setDate(d.getDate() + 7);
+      }
+      return result;
+    }
+
+    const saturdays = getNextSaturdays(8);
+
+    onSnapshot(collection(db, "votes"), (snapshot) => {
+      const votes = [];
+      snapshot.forEach(d => votes.push(d.data()));
+
+      // Aggregate counts per Saturday
+      const counts = {};
+      for (const dateStr of saturdays) {
+        counts[dateStr] = { am: 0, pm: 0, both: 0 };
+      }
+      for (const vote of votes) {
+        const sats = vote.saturdays || {};
+        for (const dateStr of saturdays) {
+          const slot = sats[dateStr] || {};
+          if (slot.am) counts[dateStr].am++;
+          if (slot.pm) counts[dateStr].pm++;
+          if (slot.am && slot.pm) counts[dateStr].both++;
+        }
+      }
+
+      // Best weekend = highest "both" count; ties broken by am + pm total
+      let bestDate = null;
+      let bestScore = -1;
+      for (const dateStr of saturdays) {
+        const c = counts[dateStr];
+        const score = c.both * 2 + c.am + c.pm;
+        if (score > bestScore) {
+          bestScore = score;
+          bestDate = dateStr;
+        }
+      }
+
+      const total = votes.length;
+      const barMax = total || 1;
+
+      const tbody = document.getElementById("results-body");
+      tbody.innerHTML = "";
+
+      for (const dateStr of saturdays) {
+        const c = counts[dateStr];
+        const displayDate = new Date(dateStr + "T00:00:00").toLocaleDateString("en-AU", {
+          day: "numeric", month: "short", year: "numeric"
+        });
+
+        const isBest = bestScore > 0 && dateStr === bestDate;
+
+        const row = document.createElement("tr");
+        if (isBest) row.classList.add("best-row");
+
+        row.innerHTML =
+          "<td>" + displayDate + (isBest ? " &nbsp;&#11088;" : "") + "</td>" +
+          "<td><span class=\"bar-wrap\">" + c.am + " / " + total +
+            "<span class=\"bar\" style=\"width:" + Math.round(c.am / barMax * 48) + "px\"></span></span></td>" +
+          "<td><span class=\"bar-wrap\">" + c.pm + " / " + total +
+            "<span class=\"bar\" style=\"width:" + Math.round(c.pm / barMax * 48) + "px\"></span></span></td>" +
+          "<td><span class=\"bar-wrap\">" + c.both + " / " + total +
+            "<span class=\"bar\" style=\"width:" + Math.round(c.both / barMax * 48) + "px\"></span></span></td>";
+
+        tbody.appendChild(row);
+      }
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("results-table").style.display = "";
+      document.getElementById("total-label").textContent =
+        total + " team" + (total !== 1 ? "s" : "") + " voted";
+    }, (err) => {
+      console.error("onSnapshot error:", err.code, err.message);
+    });
+  </script>
+</body>
+</html>
