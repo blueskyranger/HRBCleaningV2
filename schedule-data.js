@@ -1,9 +1,9 @@
 // Cleaning roster — edit this file to update the schedule everywhere
 export const schedule = [
-  { date: "2026-04-05", team: "Jordon & Maggie" },
   { date: "2026-04-12", team: "Jarred & Reuben" },
   { date: "2026-04-19", team: "Kevin & Ursh" },
   { date: "2026-04-26", team: "Nathaniel & Caietta" },
+  { date: "2026-05-03", team: "TBA" },
   { date: "2026-05-10", team: "Jarred & Reuben" },
   { date: "2026-05-17", team: "Kevin & Ursh" },
   { date: "2026-05-24", team: "Nathaniel & Caietta" },
