@@ -102,10 +102,10 @@
 
 <body>
   <h1>Free Weekend Vote</h1>
-  <p class="subtitle">Select your team and tick which Saturdays you are free (AM, PM, or both).</p>
+  <p class="subtitle">Select your name and tick which Saturdays you are free (AM, PM, or both).</p>
 
   <select id="team-picker">
-    <option value="">-- Select your team --</option>
+    <option value="">-- Select your name --</option>
   </select>
 
   <div id="saturdays-list"></div>
@@ -126,8 +126,6 @@
   </p>
 
   <script type="module">
-    import { schedule } from "./schedule-data.js";
-
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import {
@@ -158,15 +156,8 @@
 
     const db = getFirestore(app);
 
-    // Populate team dropdown from schedule, deduplicated, TBA excluded
-    const seen = new Set();
-    const teams = [];
-    for (const entry of schedule) {
-      if (entry.team !== "TBA" && !seen.has(entry.team)) {
-        seen.add(entry.team);
-        teams.push(entry.team);
-      }
-    }
+    // Individual names for the vote dropdown
+    const teams = ["Jarred", "Reuben", "Kevin", "Ursh", "Nathaniel", "Caietta"];
 
     const picker = document.getElementById("team-picker");
     for (const team of teams) {
