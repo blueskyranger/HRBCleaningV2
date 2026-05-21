@@ -210,7 +210,7 @@
       document.getElementById("loading").style.display = "none";
       document.getElementById("results-table").style.display = "";
       document.getElementById("total-label").textContent =
-        total + " team" + (total !== 1 ? "s" : "") + " voted";
+        total + " person" + (total !== 1 ? "s" : "") + " voted";
     }, (err) => {
       console.error("onSnapshot error:", err.code, err.message);
     });
