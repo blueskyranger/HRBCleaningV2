@@ -12,4 +12,13 @@ export const schedule = [
   { date: "2026-10-11", team: "Kevin & Ursh" },
   { date: "2026-10-18", team: "Nathaniel & Caietta" },
   { date: "2026-10-25", team: "Jarred & Moses" },
+  { date: "2026-11-01", team: "Kevin & Ursh" },
+  { date: "2026-11-08", team: "Nathaniel & Caietta" },
+  { date: "2026-11-15", team: "Jarred & Moses" },
+  { date: "2026-11-22", team: "Kevin & Ursh" },
+  { date: "2026-11-29", team: "Nathaniel & Caietta" },
+  { date: "2026-12-06", team: "Jarred & Moses" },
+  { date: "2026-12-13", team: "Kevin & Ursh" },
+  { date: "2026-12-20", team: "Nathaniel & Caietta" },
+  { date: "2026-12-27", team: "Jarred & Moses" },
 ];
