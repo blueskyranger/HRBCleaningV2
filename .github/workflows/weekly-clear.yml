@@ -1,0 +1,29 @@
+name: Weekly checklist clear
+
+on:
+  schedule:
+    # Monday 6:00 AM Australia/Sydney — AEDT (UTC+11) during Oct-Mar
+    - cron: "0 19 * 10,11,12,1,2,3 0"
+    # Monday 6:00 AM Australia/Sydney — AEST (UTC+10) during Apr-Sep
+    - cron: "0 20 * 4,5,6,7,8,9 0"
+  workflow_dispatch: {}
+
+jobs:
+  clear:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: scripts/weekly-clear
+        run: npm install
+
+      - name: Clear checklist
+        working-directory: scripts/weekly-clear
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: node clear.mjs
