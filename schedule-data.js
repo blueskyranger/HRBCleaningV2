@@ -1,14 +1,5 @@
 // Cleaning roster — edit this file to update the schedule everywhere
 export const schedule = [
-  { date: "2026-08-09", team: "Kevin & Ursh" },
-  { date: "2026-08-16", team: "Helen, Caietta & Chanade" },
-  { date: "2026-08-23", team: "Jarred, Moses & Rueben" },
-  { date: "2026-08-30", team: "Kevin & Ursh" },
-  { date: "2026-09-06", team: "Helen, Caietta & Chanade" },
-  { date: "2026-09-13", team: "Jarred, Moses & Rueben" },
-  { date: "2026-09-20", team: "Kevin & Ursh" },
-  { date: "2026-09-27", team: "Helen, Caietta & Chanade" },
-  { date: "2026-10-04", team: "Jarred, Moses & Rueben" },
   { date: "2026-10-11", team: "Kevin & Ursh" },
   { date: "2026-10-18", team: "Helen, Caietta & Chanade" },
   { date: "2026-10-25", team: "Jarred, Moses & Rueben" },
@@ -21,4 +12,9 @@ export const schedule = [
   { date: "2026-12-13", team: "Kevin & Ursh" },
   { date: "2026-12-20", team: "Helen, Caietta & Chanade" },
   { date: "2026-12-27", team: "Jarred, Moses & Rueben" },
+  { date: "2027-01-03", team: "Kevin & Ursh" },
+  { date: "2027-01-10", team: "Helen, Caietta & Chanade" },
+  { date: "2027-01-17", team: "Jarred, Moses & Rueben" },
+  { date: "2027-01-24", team: "Kevin & Ursh" },
+  { date: "2027-01-31", team: "Helen, Caietta & Chanade" },
 ];
